@@ -83,39 +83,56 @@ button {
     display: flex;
 }
 .tile {
-    width: 2rem;
-    height: 2rem;
+    width: 1.5rem;
+    height: 1.5rem;
     border: 5px solid;
     background-color: var(--main-color);
     border-color: var(--main-color-lighter) var(--main-color-darker) var(--main-color-darker) var(--main-color-lighter);
-    box-sizing: border-box;
+    font-size: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
 }
 
 .bomb {
-    background-color: black;
+    border-color: var(--main-color);
+    color: black;
+}
+
+.empty {
+    border-color: var(--main-color);
 }
 
 .one {
     color: green;
+    border-color: var(--main-color);
 }
 .two {
     color: yellow;
+    border-color: var(--main-color);
 }
 .three {
     color: orange;
+    border-color: var(--main-color);
 }
 .four {
     color: red;
+    border-color: var(--main-color);
 }
 .five {
     color: violet;
+    border-color: var(--main-color);
 }
 .six {
     color: blueviolet;
+    border-color: var(--main-color);
 }
 .seven {
     color: blue;
+    border-color: var(--main-color);
 }
 .eight {
     color: darkblue;
+    border-color: var(--main-color);
 }

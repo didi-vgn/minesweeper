@@ -20,18 +20,33 @@ function generateGrid (width, height, bombAmount) {
         for (let j = 1; j <= width; j++){
             const tile = document.createElement('div');
             tile.className = "tile";
-            tile.className += " " + tileArray[tileCount];
+            // tile.className += " " + tileArray[tileCount];
             tile.id = tileCount;
 
             //test
-            if (tile.classList.contains("one")) tile.textContent = "1";
-            else if (tile.classList.contains("two")) tile.textContent = "2";
-            else if (tile.classList.contains("three")) tile.textContent = "3";
-            else if (tile.classList.contains("four")) tile.textContent = "4";
-            else if (tile.classList.contains("five")) tile.textContent = "5";
-            else if (tile.classList.contains("six")) tile.textContent = "6";
-            else if (tile.classList.contains("seven")) tile.textContent = "7";
-            else if (tile.classList.contains("eight")) tile.textContent = "8";
+            // if (tile.classList.contains("one")) tile.textContent = "1";
+            // else if (tile.classList.contains("two")) tile.textContent = "2";
+            // else if (tile.classList.contains("three")) tile.textContent = "3";
+            // else if (tile.classList.contains("four")) tile.textContent = "4";
+            // else if (tile.classList.contains("five")) tile.textContent = "5";
+            // else if (tile.classList.contains("six")) tile.textContent = "6";
+            // else if (tile.classList.contains("seven")) tile.textContent = "7";
+            // else if (tile.classList.contains("eight")) tile.textContent = "8";
+
+            tile.addEventListener('click', () => {
+                if (tile.className === "tile"){
+                    tile.classList += " " + tileArray[tile.id];
+                    if (tile.classList.contains("one")) tile.textContent = "1";
+                    else if (tile.classList.contains("two")) tile.textContent = "2";
+                    else if (tile.classList.contains("three")) tile.textContent = "3";
+                    else if (tile.classList.contains("four")) tile.textContent = "4";
+                    else if (tile.classList.contains("five")) tile.textContent = "5";
+                    else if (tile.classList.contains("six")) tile.textContent = "6";
+                    else if (tile.classList.contains("seven")) tile.textContent = "7";
+                    else if (tile.classList.contains("eight")) tile.textContent = "8";
+                    else if (tile.classList.contains("bomb")) tile.textContent = "O";
+                }
+            })
 
             row.appendChild(tile);
             tileCount++;
@@ -42,7 +57,7 @@ function generateGrid (width, height, bombAmount) {
 
 generateGrid(30, 16, 99);
 
-function generateNumbers (width, height, numberArray) {
+function generateNumbers (width, height, numberArray, numbers) {
     
     for (let i = 0; i < numberArray.length; i++) {
         let number = 0;
@@ -97,7 +112,6 @@ function generateNumbers (width, height, numberArray) {
             if (numberArray[i + width] === 'bomb') number++;
             if (numberArray[i + width + 1] === 'bomb') number++;
         }
-
         switch (number) {
             case 0: numberArray[i] = 'empty'; break;
             case 1: numberArray[i] = 'one'; break;
