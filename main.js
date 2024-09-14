@@ -1,16 +1,19 @@
 const container = document.querySelector(".grid-container");
+const difficulty = document.getElementById('difficulty');
 const bomb = 'bomb';
 const empty = 'empty';
-const width = 30;
-const height = 16;
-const bombAmount = 99;
 
-let tileCount = 0;
-let tileArray = [];
-let valueArray = [];
-let gameOver = false;
+let width, height, bombAmount, bombsLeft, tileCount, tileArray, valueArray, gameOver;
+
+getDifficulty();
+
+difficulty.addEventListener("change", getDifficulty);
 
 function generateGameBoard (width, height, bombAmount) {
+    tileCount = 0;
+    tileArray = [];
+    valueArray = [];
+    gameOver = false;
     fillArray(tileArray, (width * height - bombAmount), empty);
     fillArray(tileArray, bombAmount, bomb);
     tileArray.sort(() => Math.random() - 0.5); //shuffle array
@@ -26,20 +29,74 @@ function generateGameBoard (width, height, bombAmount) {
             const tile = document.createElement('div');
             tile.className = "tile";
             tile.id = tileCount;
-
-            tile.addEventListener('click', () => {
-                if (tile.className === "tile") clickTile(tile);
+            tile.setAttribute("oncontextmenu", "event.preventDefault();");
+            tile.addEventListener('mouseup', (e) => {
+                if ((tile.className === "tile" || tile.className === "tile flag") && gameOver === false)
+                    switch(e.button) {
+                        case 0: {
+                            if (!tile.classList.contains("flag")){
+                                clickTile(tile); 
+                            }
+                            break;
+                        }
+                        case 2: {
+                            tile.classList.toggle("flag");
+                            if (tile.classList.contains("flag")) {
+                                bombsLeft--;
+                            } else bombsLeft++;
+                            updateDisplay();
+                            break;
+                        }
+                    }
             })
-
             row.appendChild(tile);
             tileCount++;
         }
         container.appendChild(row);
     }
-
+    updateDisplay();
 }
 
-generateGameBoard(width, height, bombAmount);
+function getDifficulty() {
+    clearGameBoard();
+    switch (difficulty.value) {
+        case "begginer": {
+            width = 9;
+            height = 9;
+            bombAmount = 10;
+            bombsLeft = bombAmount;
+            console.log(width);
+            
+            break;
+        }
+        case "intermediate": {
+            width = 16;
+            height = 16;
+            bombAmount = 40;
+            bombsLeft = bombAmount;
+            console.log(width);
+
+            break;
+        }
+        case "expert": {
+            width = 30;
+            height = 16;
+            bombAmount = 99;
+            bombsLeft = bombAmount;
+            console.log(width);
+
+            break;
+        }
+    }
+    generateGameBoard(width, height, bombAmount);
+}
+
+function clearGameBoard(){
+    const rows = document.querySelectorAll(".row");
+    rows.forEach(row => {
+        row.remove();
+    });
+}
 
 function fillArray(array, numberOfElements, element) {
     for (let i = 0; i < numberOfElements; i++) {
@@ -47,6 +104,12 @@ function fillArray(array, numberOfElements, element) {
     }
     return;
 }
+
+function updateDisplay(){
+    const display = document.querySelector(".display");
+    display.textContent = bombsLeft;
+}
+
 function isLeftEdge(index) {return (index % width === 0);}
 function isRightEdge(index) {return (index % width === width - 1);}
 function isTopEdge(index) {return ((index >= 0) && (index < width));}
@@ -123,14 +186,20 @@ function clickAdjacentTiles(tile) {
 function revealGameBoard(){
     const tiles = document.querySelectorAll('.tile');            
     tiles.forEach(tile => {
-        if (tile.className === "tile"){
-        tile.classList += " " + tileArray[tile.id];
-            if (tile.classList.contains(empty)) {
-                tile.textContent = " ";
-            } else if (tile.classList.contains(bomb)) {
-                tile.textContent = "*";
-            } else tile.textContent = valueArray[tile.id];
+
+        //decide later which option to keep
+        if (tile.className === "tile" && tileArray[tile.id] === bomb) {
+            tile.classList += " " + tileArray[tile.id];
+            tile.textContent = "💣";
         }
+        // if (tile.className === "tile"){
+        // tile.classList += " " + tileArray[tile.id];
+        //     if (tile.classList.contains(empty)) {
+        //         tile.textContent = " ";
+        //     } else if (tile.classList.contains(bomb)) {
+        //         tile.textContent = "💣";
+        //     } else tile.textContent = valueArray[tile.id];
+        // }
     })
 }
 
@@ -140,7 +209,7 @@ function clickTile(tile) {
         clickAdjacentTiles(tile);
     }
     else if (tile.classList.contains(bomb)) {
-        tile.textContent = "*"; 
+        tile.textContent = "💣"; 
         revealGameBoard();
         gameOver = true;
     } else {tile.textContent = valueArray[tile.id];}
