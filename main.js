@@ -1,15 +1,26 @@
 const container = document.querySelector(".grid-container");
 const difficulty = document.getElementById('difficulty');
+const reset = document.querySelector(".reset");
 const bomb = 'bomb';
 const empty = 'empty';
 
 let width, height, bombAmount, bombsLeft, tileCount, tileArray, valueArray, gameOver;
 
-getDifficulty();
+let timer = false;
+let minute = 0;
+let second = 0;
 
+getDifficulty();
 difficulty.addEventListener("change", getDifficulty);
 
+reset.addEventListener("click", () => {
+    clearGameBoard();
+    generateGameBoard(width, height, bombAmount);
+    resetTimer();
+});
+
 function generateGameBoard (width, height, bombAmount) {
+    bombsLeft = bombAmount;
     tileCount = 0;
     tileArray = [];
     valueArray = [];
@@ -31,7 +42,7 @@ function generateGameBoard (width, height, bombAmount) {
             tile.id = tileCount;
             tile.setAttribute("oncontextmenu", "event.preventDefault();");
             tile.addEventListener('mouseup', (e) => {
-                if ((tile.className === "tile" || tile.className === "tile flag") && gameOver === false)
+                if ((tile.className === "tile" || tile.className === "tile flag") && gameOver === false){
                     switch(e.button) {
                         case 0: {
                             if (!tile.classList.contains("flag")){
@@ -40,7 +51,7 @@ function generateGameBoard (width, height, bombAmount) {
                             break;
                         }
                         case 2: {
-                            tile.classList.toggle("flag");
+                            tile.classList.toggle("flag"); /// bombs left can have negative valuse
                             if (tile.classList.contains("flag")) {
                                 bombsLeft--;
                             } else bombsLeft++;
@@ -48,6 +59,14 @@ function generateGameBoard (width, height, bombAmount) {
                             break;
                         }
                     }
+                    if (timer === false) {
+                        timer = true;
+                        startTimer();
+                    }
+                }
+                if (gameOver === true) {
+                    timer = false;
+                }
             })
             row.appendChild(tile);
             tileCount++;
@@ -56,35 +75,55 @@ function generateGameBoard (width, height, bombAmount) {
     }
     updateDisplay();
 }
+function startTimer() {    
+    if (timer === true) {
+        second++
+        if (second === 60) {
+            minute++;
+            second = 0;
+        }
+
+        let minDisplay = minute;
+        let secDisplay = second;
+        if (minute < 10) {
+            minDisplay = "0" + minDisplay;
+        }
+        if (second < 10) {
+            secDisplay = "0" + secDisplay;
+        }
+
+        document.querySelector('.stopwatch').textContent = `${minDisplay}:${secDisplay}`;
+        setTimeout(startTimer, 1000)
+    }
+}
+
+function resetTimer() {
+    timer = false;
+    minute = 0;
+    second = 0;
+    document.querySelector('.stopwatch').textContent = '00:00';
+}
 
 function getDifficulty() {
     clearGameBoard();
+    resetTimer();
     switch (difficulty.value) {
         case "begginer": {
             width = 9;
             height = 9;
             bombAmount = 10;
-            bombsLeft = bombAmount;
-            console.log(width);
-            
             break;
         }
         case "intermediate": {
             width = 16;
             height = 16;
             bombAmount = 40;
-            bombsLeft = bombAmount;
-            console.log(width);
-
             break;
         }
         case "expert": {
             width = 30;
             height = 16;
             bombAmount = 99;
-            bombsLeft = bombAmount;
-            console.log(width);
-
             break;
         }
     }
@@ -183,34 +222,16 @@ function clickAdjacentTiles(tile) {
     return;
 }
 
-function revealGameBoard(){
-    const tiles = document.querySelectorAll('.tile');            
-    tiles.forEach(tile => {
-
-        //decide later which option to keep
-        if (tile.className === "tile" && tileArray[tile.id] === bomb) {
-            tile.classList += " " + tileArray[tile.id];
-            tile.textContent = "💣";
-        }
-        // if (tile.className === "tile"){
-        // tile.classList += " " + tileArray[tile.id];
-        //     if (tile.classList.contains(empty)) {
-        //         tile.textContent = " ";
-        //     } else if (tile.classList.contains(bomb)) {
-        //         tile.textContent = "💣";
-        //     } else tile.textContent = valueArray[tile.id];
-        // }
-    })
-}
-
 function clickTile(tile) {
     tile.classList += " " + tileArray[tile.id];
     if (tile.classList.contains(empty)) {
         clickAdjacentTiles(tile);
-    }
-    else if (tile.classList.contains(bomb)) {
-        tile.textContent = "💣"; 
-        revealGameBoard();
+    } else if (tile.classList.contains(bomb)) {
+        // revealGameBoard();
+        for (let i = 0; i < tileArray.length; i++){
+            if (tileArray[i] === bomb && document.getElementById(i).className === 'tile')
+                document.getElementById(i).classList += ' ' + bomb;
+        }
         gameOver = true;
     } else {tile.textContent = valueArray[tile.id];}
 }

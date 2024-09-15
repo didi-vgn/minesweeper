@@ -17,20 +17,21 @@
     <div class="game-container">
         <div class="nav-bar">
             <div class="display"></div>
-            <div>💣</div>
+            <div class="bombsLeft"></div>
             <select id="difficulty">
                 <option value="begginer" selected>9x9 / 10 mines</option>
                 <option value="intermediate">16x16 / 40 mines</option>
                 <option value="expert">30x16 / 99 mines</option>
             </select>
-            <button class="reset"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+            <div class="stopwatch">00:00</div>
+            <button class="reset"></button>
         </div>
         <div class="grid-container"></div>
     </div>
     <div class="footer">
         <button>How to Play</button>
         <button>About</button>
-        <button><i class="fa-solid fa-bug"></i></button>
+        <button class="bug">Report a bug</button>
     </div>
 </body>
 </html>

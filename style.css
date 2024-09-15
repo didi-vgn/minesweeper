@@ -21,6 +21,8 @@ body {
 button {
     font-family: "Micro 5", sans-serif;
     font-size: 2rem;
+    height: 2.75rem;
+    color: black;
     border: 5px solid;
     box-sizing: border-box;
     background-color: var(--main-color);
@@ -38,31 +40,50 @@ button {
 
 .nav-bar {
     display: grid;
-    grid-template-columns: 3rem 3rem auto 3rem;
+    grid-template-columns: 3rem 3rem auto auto 3rem;
     margin-bottom: 3px;
+    gap: 5px;
 
     > .display {
         background-color: white;
         border: 2px solid black;
-        padding-top: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    > .fa-bomb {
-        padding-top: 5px;
+    > .bombsLeft {
+        background-image: url("./images/bomb.png");
+        background-size: contain;
+    }
+
+    > .stopwatch {
+        background-color: white;
+        border: 2px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        justify-self: start;
+        width: 4rem;
     }
 
     > select {
         font-family: "Micro 5", sans-serif;
         font-size: 2rem;
+        background-color: white;
+        border: 2px solid black;
         width: 250px;
         justify-self: center;
         border: 2px solid black;
+        justify-self: end;
     }
 
     > button {
         padding-top: 3px;
         width: 3rem;
         height: 3rem;
+        background-image: url("/images/arrows.png");
+        background-size: contain;
     }
 }
 
@@ -77,9 +98,9 @@ button {
 
 .footer {
     padding: 3px;
-    > button > .fa-bug {
-        font-size: 1.5rem;
-    }
+    display: flex;
+    gap: 10px;
+    justify-content: center;
 }
 
 .row {
@@ -101,8 +122,8 @@ button {
 
 .bomb {
     border: 1px solid var(--main-color-darker);
-    color: black;
-    font-size: 1.75rem;
+    background-image: url('./images/bomb.png');
+    background-size: contain;
 }
 
 .empty {
@@ -142,8 +163,9 @@ button {
     border: 1px solid var(--main-color-darker);
 }
 
-.flag::after{
-    content: "🚩";
+.flag{
+    background-image: url("./images/flag.png");
+    background-size: contain;
     font-size: 1.5rem;
     color: var(--accent-color);
     font-weight: bold;
