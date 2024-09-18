@@ -15,14 +15,27 @@ body {
     color: black;
 }
 
+input, textarea, select {
+    font-family: inherit;
+    border: 2px solid black;
+    color: black;
+    font-size: 1.25rem;
+    background-color: white;
+}
+
 button {
-    font-family: "Courier Prime", monospace;
+    font-family: inherit;
     font-size: 1.5rem;
     color: black;
     border: 5px solid;
     box-sizing: border-box;
     background-color: var(--main-color);
     border-color: var(--main-color-lighter) var(--main-color-darker) var(--main-color-darker) var(--main-color-lighter);
+}
+
+button:active {
+    background-color: #b0bdce;
+    border-color: var(--main-color-darker) var(--main-color-lighter) var(--main-color-lighter) var(--main-color-darker);
 }
 
 .title {
@@ -37,11 +50,11 @@ button {
 
 .nav-bar {
     display: grid;
-    grid-template-columns: 3rem 3rem auto auto 3rem;
+    grid-template-columns: 48px 48px auto auto 48px;
     margin-bottom: 3px;
     gap: 5px;
 
-    > .display {
+    > .display, .stopwatch {
         background-color: white;
         border: 2px solid black;
         display: flex;
@@ -55,30 +68,18 @@ button {
     }
 
     > .stopwatch {
-        background-color: white;
-        border: 2px solid black;
-        width: 5rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         justify-self: start;
     }
 
     > select {
-        font-family: "Courier Prime", monospace;
-        font-size: 1.25rem;
-        color: black;
-        background-color: white;
-        border: 2px solid black;
         width: 250px;
-        border: 2px solid black;
         justify-self: end;
     }
 
     > .reset {
-        width: 3rem;
-        height: 3rem;
-        background-image: url("/images/arrow02.png");
+        width: 48px;
+        height: 48px;
+        background-image: url("./images/arrow02.png");
         background-size: contain;
     }
 }
@@ -162,7 +163,6 @@ button {
 .flag{
     background-image: url("./images/flag02.png");
     background-size: contain;
-    color: var(--accent-color);
 }
 
 .modal {
@@ -189,14 +189,15 @@ button {
     max-height: 80%;
 
     >.close-modal {
-        width: 3rem;
-        height: 3rem;
+        width: 48px;
+        height: 48px;
         font-size: 2rem;
         justify-self: end;
         display: flex;
         align-items: center;
         justify-content: center;
     }
+
     >.modal-content{
         background-color: var(--main-color);
         border: 5px solid;
@@ -214,10 +215,26 @@ h2 {
 p{
     font-weight: lighter;
     font-size: 1.5rem;
-    text-align: left;
 }
 
 .open {
     opacity: 1;
     z-index: 100;
+}
+
+
+.subject, .message {
+    display: flex;
+    align-items: start;
+    flex-wrap: wrap;
+    margin: 26px;
+}
+
+input, textarea {
+    min-width: 150px;
+    flex-grow: 1;
+}
+
+textarea {
+    min-height: 150px;
 }

@@ -1,10 +1,16 @@
-const container = document.querySelector(".grid-container");
+import {
+    displayGameOver,
+
+    displayGameSolved,
+} from "./modals.js"
+
+const container = document.querySelector('.grid-container');
 const difficulty = document.getElementById('difficulty');
-const reset = document.querySelector(".reset");
+const reset = document.querySelector('.reset');
 const bomb = 'bomb';
 const empty = 'empty';
 
-let width, height, bombAmount, bombsLeft, tileCount, tileArray, valueArray, gameOver;
+let width, height, bombAmount, bombsLeft, tileCount, tileArray, valueArray, gameOver, winCondition, clickedCounter;
 
 let timer = false;
 let minute = 0;
@@ -20,11 +26,14 @@ reset.addEventListener("click", () => {
 });
 
 function generateGameBoard (width, height, bombAmount) {
+    winCondition = width * height - bombAmount;
+    clickedCounter = 0;
     bombsLeft = bombAmount;
     tileCount = 0;
     tileArray = [];
     valueArray = [];
     gameOver = false;
+    
     fillArray(tileArray, (width * height - bombAmount), empty);
     fillArray(tileArray, bombAmount, bomb);
     tileArray.sort(() => Math.random() - 0.5); //shuffle array
@@ -34,25 +43,24 @@ function generateGameBoard (width, height, bombAmount) {
 
     for (let i = 1; i <= height; i++){
         const row = document.createElement('div');
-        row.className = "row";
+        row.className = 'row';
 
         for (let j = 1; j <= width; j++){
             const tile = document.createElement('div');
-            tile.className = "tile";
+            tile.className = 'tile';
             tile.id = tileCount;
             tile.setAttribute("oncontextmenu", "event.preventDefault();");
-            tile.addEventListener('mouseup', (e) => {
-                if ((tile.className === "tile" || tile.className === "tile flag") && gameOver === false){
+            tile.addEventListener("mouseup", (e) => {
+                if ((tile.className === 'tile' || tile.className === 'tile flag') && gameOver === false){
                     switch(e.button) {
                         case 0: {
-                            if (!tile.classList.contains("flag")){
+                            if (!tile.classList.contains('flag')){
                                 clickTile(tile); 
-                            }
-                            break;
+                            } break;
                         }
                         case 2: {
-                            tile.classList.toggle("flag"); /// bombs left can have negative valuse
-                            if (tile.classList.contains("flag")) {
+                            tile.classList.toggle('flag');
+                            if (tile.classList.contains('flag')) {
                                 bombsLeft--;
                             } else bombsLeft++;
                             updateDisplay();
@@ -67,6 +75,9 @@ function generateGameBoard (width, height, bombAmount) {
                 if (gameOver === true) {
                     timer = false;
                 }
+                if (clickedCounter === winCondition) {
+                    timer = false;
+                }
             })
             row.appendChild(tile);
             tileCount++;
@@ -75,6 +86,7 @@ function generateGameBoard (width, height, bombAmount) {
     }
     updateDisplay();
 }
+
 function startTimer() {    
     if (timer === true) {
         second++
@@ -140,13 +152,11 @@ function clearGameBoard(){
 function fillArray(array, numberOfElements, element) {
     for (let i = 0; i < numberOfElements; i++) {
         array.push(element);
-    }
-    return;
+    } return;
 }
 
 function updateDisplay(){
-    const display = document.querySelector(".display");
-    display.textContent = bombsLeft;
+    document.querySelector('.display').textContent = bombsLeft;
 }
 
 function isLeftEdge(index) {return (index % width === 0);}
@@ -180,8 +190,7 @@ function checkAdjacentTiles() {
             case 8: tileArray[i] = 'eight'; break;
         }
         valueArray.push(number);
-    }
-    return;
+    } return;
 }
 
 function clickAdjacentTiles(tile) {
@@ -223,15 +232,28 @@ function clickAdjacentTiles(tile) {
 }
 
 function clickTile(tile) {
-    tile.classList += " " + tileArray[tile.id];
+    clickedCounter++;
+    tile.classList.add(tileArray[tile.id]);
     if (tile.classList.contains(empty)) {
         clickAdjacentTiles(tile);
     } else if (tile.classList.contains(bomb)) {
-        // revealGameBoard();
         for (let i = 0; i < tileArray.length; i++){
             if (tileArray[i] === bomb && document.getElementById(i).className === 'tile')
-                document.getElementById(i).classList += ' ' + bomb;
+                document.getElementById(i).classList.add(bomb);
         }
         gameOver = true;
+            displayGameOver();
     } else {tile.textContent = valueArray[tile.id];}
+    if (clickedCounter === winCondition && !gameOver) {
+        displayGameSolved();
+    }
+}
+
+export {
+    clearGameBoard,
+    generateGameBoard,
+    width, 
+    height, 
+    bombAmount,
+    resetTimer,
 }
