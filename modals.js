@@ -1,10 +1,8 @@
 import {
-    clearGameBoard,
     generateGameBoard,
     width, 
     height, 
     bombAmount,
-    resetTimer,
 } from "./main.js";
 
 const rules = document.querySelector('.rules');
@@ -80,10 +78,7 @@ function newGame() {
     while (modalContent.firstChild){
         modalContent.removeChild(modalContent.lastChild);
     }
-
-    clearGameBoard();
     generateGameBoard(width, height, bombAmount);
-    resetTimer();
 }
 
 function displayReport() {
